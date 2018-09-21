@@ -1,0 +1,24 @@
+{
+  "RootNamespace":"",
+  "Packages": [
+    "Fuse",
+    "FuseJS"
+  ],
+  "Projects": [
+    "QReader/fuse-qreader.unoproj"
+  ],
+  "Includes": [
+    "*",
+    "*.ux",
+    "**.js:Bundle",
+    "*.jpg:Bundle",
+    "*.jpeg:Bundle",
+    "*.png:Bundle",
+    "*.uno"
+  ],
+  "Mobile": {
+    "Orientations": "Portrait"
+  },
+  "Name": "SATAsyke"
+}
+

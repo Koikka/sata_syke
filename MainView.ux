@@ -1,0 +1,344 @@
+<App>
+	<iOS.StatusBarConfig Style="Light" />
+	<JavaScript File="js/main.js" />
+	<float4 ux:Global="mainColor" ux:Value="#E79635" />
+	<float4 ux:Global="additionalColor" ux:Value="#EDEDED" />
+	<float4 ux:Global="backgroundColor" ux:Value="#FAFAFA" />
+	<float4 ux:Global="textColor" ux:Value="#000000" />
+<!-- Menu -->
+	<EdgeNavigator>
+		<Panel ux:Name="sidebar" Edge="Left" Width="100%" Margin="0,0,56,0" Background="#37474F">
+			<Shadow ux:Name="shadow" Angle="180" Distance="8" Size="16" Color="#0000" />
+			<StackPanel ux:Name="menu" Opacity="1" ContentAlignment="VerticalCenter" ItemSpacing="50" Margin="0,0,0,0">
+				<Size ux:Global="MenuItemHeight" ux:Value="40" />
+				<Panel ux:Class="MenuItem" Height="MenuItemHeight">
+					<Rectangle Alignment="Bottom" Height="2" Color="mainColor" />
+				</Panel>
+				<!-- MENU -->
+				<MenuItem ux:Class="MenuButton" Height="MenuItemHeight" HitTestMode="LocalBounds">
+					<string ux:Property="Text" />
+					<Text ux:Name="label" Value="{ReadProperty Text}" FontSize="24" Alignment="Top" Color="mainColor" />
+					<WhilePressed>
+						<Scale Target="label" Factor=".85" Duration=".1" />
+					</WhilePressed>
+				</MenuItem>
+				<!-- MENU ITEMS -->
+				<StackPanel ux:Name="normalMenuItems" ItemSpacing="50">
+					<MenuButton Alignment="HorizontalCenter" Text="Home">
+						<Clicked>
+							<Set home.Visibility="Visible" />
+							<Set register.Visibility="Collapsed" />
+							<Set status_page.Visibility="Collapsed" />
+							<DebugAction Message="{user_id_text}" />
+							<NavigateToggle Target="sidebar" />
+							<!-- <Set extraContent.Visibility="Collapsed" /> -->
+						</Clicked>
+					</MenuButton>
+					<MenuButton Alignment="HorizontalCenter" Text="Status page">
+						<Clicked>
+							<Set home.Visibility="Collapsed" />
+							<Set register.Visibility="Collapsed" />
+							<Set status_page.Visibility="Visible" />
+							<NavigateToggle Target="sidebar" />
+							<!-- <Set menuIsOpen.Value="false" />
+							<Set homePage.Visibility="Collapsed" />
+							<Set webViewContent.Visibility="Visible" />
+							<Set extraContent.Visibility="Collapsed" /> -->
+						</Clicked>
+					</MenuButton>
+					<MenuButton Alignment="HorizontalCenter" Text="Register new device">
+						<Clicked>
+							<Set home.Visibility="Collapsed" />
+							<Set register.Visibility="Visible" />
+							<Set status_page.Visibility="Collapsed" />
+							<NavigateToggle Target="sidebar" />
+							<!-- <Set menuIsOpen.Value="false" />
+							<Set homePage.Visibility="Collapsed" />
+							<Set webViewContent.Visibility="Visible" />
+							<Set extraContent.Visibility="Collapsed" /> -->
+						</Clicked>
+					</MenuButton>
+					<Image File="Images/logo.png" StretchMode="UniformToFill" Opacity="0.85" Alignment="Default" StretchDirection="Both" Margin="40, 0, 40, 0" />
+				</StackPanel>
+			</StackPanel>
+			<ActivatingAnimation>
+				<Change shadow.Color="#0004" />
+				<Change sidebarFade.Opacity="1" />
+				<Change sidebarFade2.Opacity="1" />
+				<Change sidebarFade3.Opacity="1" />
+			</ActivatingAnimation>
+		</Panel>
+<!-- Home Page -->
+		<DockPanel ux:Name="home" Color="backgroundColor" Visibility="Visible">
+			<Rectangle ux:Name="sidebarFade" Layer="Overlay" Color="#0005" Opacity="0" HitTestMode="None" />
+			<StackPanel Dock="Top" Color="mainColor">
+				<Shadow Size="3" Distance="1" />
+				<StatusBarBackground />
+				<Panel Height="56">
+					<Hamburger Alignment="Left" Margin="0, 0, 0, 0">
+						<Clicked>
+							<NavigateToggle Target="sidebar" />
+						</Clicked>
+					</Hamburger>
+				</Panel>
+			</StackPanel>
+			<Panel>
+				<Image Layer="Background" File="{bg_image}" StretchMode="UniformToFill" Opacity="0.85" Alignment="Top" StretchDirection="Both">
+					<Blur Radius="0.0" />
+					<Rotation Degrees="0" />
+				</Image>
+				<!-- <ScrollView Background="#f9f9f9"> -->
+				<ScrollView>
+					<StackPanel>
+				    	<Each Items="{events}">
+		                    <!-- <DebugAction Message="i" /> -->
+		                    <StackPanel ux:Name="adminGridItems" Physics.IsPhysicsWorld="true" ZOffset="0.0" ItemSpacing="20" Color="{color}" Margin="1,1" Padding="2,2" Clicked="{selected}">
+		                    	<Rectangle ux:Name="grid_rectangle" Padding="2,2">
+			                    	<WhileTrue Value="{change_color}">
+										<Change adminGridItems.Color="#1EB917" Duration="0.4" Easing="CubicIn" />
+										<Change weekday_text.Color="#fff" Duration="0.4" Easing="CubicIn" />
+										<Change name_text.Color="#fff" Duration="0.4" Easing="CubicIn" />
+			                       	</WhileTrue>
+			                       	<WhileTrue Value="{history_done}">
+										<Change grid_rectangle.Color="#1EB917" Duration="0.4" Easing="CubicIn" />
+										<Change adminGridItems.Color="#2CA206" Duration="0.4" Easing="CubicIn" />
+										<Change weekday_text.Color="#fff" Duration="0.4" Easing="CubicIn" />
+										<Change name_text.Color="#fff" Duration="0.4" Easing="CubicIn" />
+										<!-- <Stroke Width="2" Color="#2CA206"/> -->
+										<!-- <Stroke Width="3" Color="#f00" /> -->
+			                       	</WhileTrue>
+			                       	<WhileTrue Value="{change_color_false}">
+										<Change adminGridItems.Color="#E74C3C" Duration="0.2" Easing="CubicIn" />
+			                       	</WhileTrue>
+			                       	<Grid Columns="2*,8*" ColumnCount="2" DefaultColumn="1*" CellSpacing="10" Margin="2,2" Height="40">
+			                    		<Text ux:Name="weekday_text" TextWrapping="Wrap" TextAlignment="Left" Alignment="CenterLeft" Value="{weekday}" />
+			                    		<Text ux:Name="name_text" TextWrapping="Wrap" TextAlignment="Left" Alignment="CenterLeft" Value="{name}" />
+			                    	</Grid>
+			                    </Rectangle>
+		                    </StackPanel>
+		                </Each>
+		                <Button Alignment="Center" Text="" Margin="20,20" Clicked="{send_program}" Padding="20,10,20,10" Width="100" Visibility="{send_program_visibility}">
+					    	<Tapped>
+		            			<Scale Factor="0.8" Duration="0.3" Easing="QuadraticInOut" />
+		            			<!-- <Callback Handler="{load_program}" /> -->
+		            		</Tapped>
+				    		<Text Value="Send" Color="#fff" Alignment="Center" TextAlignment="Center" />
+				    		<float4 ux:Key="C600" ux:Value="#fff" />
+				    		<float4 ux:Key="C700" ux:Value="#fff" />
+				    		<Rectangle CornerRadius="4" Layer="Background" Color="#46aa1f" />
+				    	</Button>
+				    	<Button Alignment="Center" Text="" Margin="20,20" Clicked="{load_program}" Padding="20,10,20,10" Visibility="{load_program_visibility}">
+					    	<Tapped>
+		            			<Scale Factor="0.8" Duration="0.3" Easing="QuadraticInOut" />
+		            		</Tapped>
+				    		<Text Value="Load my program" Color="#fff" Alignment="Center" TextAlignment="Center" />
+				    		<float4 ux:Key="C600" ux:Value="#fff" />
+				    		<float4 ux:Key="C700" ux:Value="#fff" />
+				    		<Rectangle CornerRadius="4" Layer="Background" Color="#46aa1f" />
+				    	</Button>
+						<!-- <Text Value="page 1" /> -->
+						<!-- <Image ContentAlignment="CenterRight" Url="{user_id_img}" StretchMode="Uniform" Width="150" Height="150" /> -->
+						<!-- <Text Value="{user_id_text}" /> -->
+					</StackPanel>
+					<!-- Page triggers -->
+					<Activated>
+	                    <Callback Handler="{load_program}" />
+	                </Activated>
+					<WhileVisible>
+						<Set move_object.Value="false" />
+						<Set move_track_1.Value="false" />
+						<Set move_track_2.Value="false" />
+						<Set move_track_4.Value="false" />
+						<Set move_track_5.Value="false" />
+						<Activated>
+		                    <Callback Handler="{load_program}" />
+		                </Activated>
+					</WhileVisible>
+				</ScrollView>
+			</Panel>
+			<BottomFrameBackground DockPanel.Dock="Bottom" />
+		</DockPanel>
+<!-- Register Page -->
+		<DockPanel ux:Name="register" Color="backgroundColor" Visibility="Collapsed">
+			<Rectangle ux:Name="sidebarFade2" Layer="Overlay" Color="#0005" Opacity="0" HitTestMode="None" />
+			<StackPanel Dock="Top" Color="mainColor">
+				<Shadow Size="3" Distance="1" />
+				<StatusBarBackground />
+				<Panel Height="56">
+					<Hamburger Alignment="Left">
+						<Clicked>
+							<NavigateToggle Target="sidebar" />
+						</Clicked>
+						<!-- <LinearGradient>
+							<GradientStop Offset="0" Color="#ADDDAB" />
+							<GradientStop Offset="1" Color="#6DC0D2" />
+						</LinearGradient> -->
+					</Hamburger>
+				</Panel>
+			</StackPanel>
+			<JavaScript>
+
+			</JavaScript>
+			<ClientPanel>
+				<Image Layer="Background" File="{bg_image}" StretchMode="UniformToFill" Opacity="0.85" Alignment="Top" StretchDirection="Both">
+					<Blur Radius="0.0" />
+					<Rotation Degrees="0" />
+				</Image>
+				<StackPanel>
+					<Text FontSize="20" TextWrapping="Wrap" Alignment="TopCenter">Register this device by scanning QR code</Text>
+					<!-- <Text Value="{txt}" /> -->
+					<Button Text="SCAN" Clicked="{load}" />
+					<TextInput ux:Name="text" PlaceholderText="Password to 100syke" PlaceholderColor="#ccc" Height="50" Padding="5" Margin="10" Value="{txt}">
+				        <Rectangle Layer="Background" Color="#F8F5E9">
+				            <Stroke Width="2" Brush="#BBB" />
+				        </Rectangle>
+				    </TextInput>
+				    <Button Alignment="Center" Text="" Margin="20,20" Clicked="{validate_code}" Padding="20,10,20,10" Width="100">
+				    	<Tapped>
+                			<Scale Factor="0.8" Duration="0.3" Easing="QuadraticInOut" />
+                		</Tapped>
+			    		<Text Value="Validate" Color="#fff" Alignment="Center" TextAlignment="Center" />
+			    		<float4 ux:Key="C600" ux:Value="#fff" />
+			    		<float4 ux:Key="C700" ux:Value="#fff" />
+			    		<Rectangle CornerRadius="4" Layer="Background" Color="#46aa1f" />
+			    	</Button>
+			    	<Text Value="{txt_2}" TextWrapping="Wrap" FontSize="26" Alignment="Center">
+			    	</Text>
+				</StackPanel>
+				<WhileVisible>
+					<Set move_object.Value="false" />
+					<Set move_track_1.Value="false" />
+					<Set move_track_2.Value="false" />
+					<Set move_track_4.Value="false" />
+					<Set move_track_5.Value="false" />
+				</WhileVisible>
+			</ClientPanel>
+		</DockPanel>
+<!-- Status Page -->
+		<DockPanel ux:Name="status_page" Color="backgroundColor" Visibility="Collapsed">
+			<Rectangle ux:Name="sidebarFade3" Layer="Overlay" Color="#0005" Opacity="0" HitTestMode="None" />
+			<StackPanel Dock="Top" Color="mainColor">
+				<Shadow Size="3" Distance="1" />
+				<StatusBarBackground />
+				<Panel Height="56">
+					<Hamburger Alignment="Left">
+						<Clicked>
+							<NavigateToggle Target="sidebar" />
+						</Clicked>
+					</Hamburger>
+				</Panel>
+			</StackPanel>
+			<JavaScript>
+
+			</JavaScript>
+			<WhileVisible ux:Name="move_object_reset">
+				<!-- <Set move_object.Value="false" /> -->
+			</WhileVisible>
+			<Panel>
+				<ScrollView>
+					<StackPanel>
+						<!-- <Text TextWrapping="Wrap" FontSize="19" Alignment="TopCenter">Click "Show progression" to see your status.</Text> -->
+						<Panel Margin="0, 20, 0, 0" Height="500" Width="250">
+							<Grid Columns="1*" ColumnCount="5" DefaultColumn="1*" CellSpacing="0" Margin="0,0">
+					        	<Panel Background="#000" Width="50" Height="500">
+					        		<Image Layer="Background" File="Images/track_01.png" StretchMode="Fill" Opacity="0.85" Alignment="Top" />
+									<Rectangle ux:Name="progression_1" Color="#F00" Width="15" Height="15" Alignment="BottomCenter" CornerRadius="12.5" />
+									<WhileTrue ux:Name="move_track_1" Value="false">
+										<Change progression_1.Y="{collective_progression_1}" Duration="1.0" Easing="CubicIn" />
+									</WhileTrue>
+								</Panel>
+								<Panel Background="#000" Width="50" Height="500">
+									<Image Layer="Background" File="Images/track_02.png" StretchMode="Fill" Opacity="0.85" Alignment="Top" />
+									<Rectangle ux:Name="progression_2" Color="#F00" Width="15" Height="15" Alignment="BottomCenter" CornerRadius="12.5" />
+									<WhileTrue ux:Name="move_track_2" Value="false">
+										<Change progression_2.Y="{collective_progression_2}" Duration="1.0" Easing="CubicIn" />
+									</WhileTrue>
+								</Panel>
+					        	<Panel Background="#000" Width="50" Height="500">
+					        		<Image Layer="Background" File="Images/track_03.png" StretchMode="Fill" Opacity="0.85" Alignment="Top" />
+									<!-- <Rectangle ux:Name="own_progression" Color="#F00" Width="10" Height="10" Alignment="BottomCenter" Y="{progression}" CornerRadius="5" /> -->
+									<Rectangle ux:Name="own_progression" Color="#F00" Width="20" Height="20" Alignment="BottomCenter" CornerRadius="10" />
+									<WhileTrue ux:Name="move_object" Value="false">
+										<Change own_progression.Y="{progression}" Duration="1.0" Easing="CubicIn" />
+									</WhileTrue>
+								</Panel>
+								<Panel Background="#000" Width="50" Height="500">
+									<Image Layer="Background" File="Images/track_04.png" StretchMode="Fill" Opacity="0.85" Alignment="Top" />
+									<Rectangle ux:Name="progression_4" Color="#F00" Width="15" Height="15" Alignment="BottomCenter" CornerRadius="12.5" />
+									<WhileTrue ux:Name="move_track_4" Value="false">
+										<Change progression_4.Y="{collective_progression_4}" Duration="1.0" Easing="CubicIn" />
+									</WhileTrue>
+								</Panel>
+								<Panel Background="#000" Width="50" Height="500">
+									<Image Layer="Background" File="Images/track_05.png" StretchMode="Fill" Opacity="0.85" Alignment="Top" />
+									<Rectangle ux:Name="progression_5" Color="#F00" Width="15" Height="15" Alignment="BottomCenter" CornerRadius="12.5" />
+									<WhileTrue ux:Name="move_track_5" Value="false">
+										<Change progression_5.Y="{collective_progression_5}" Duration="1.0" Easing="CubicIn" />
+									</WhileTrue>
+								</Panel>
+					        </Grid>
+					    </Panel>
+					    <Panel Margin="0, 10, 0, 0" Height="20" Width="250">
+							<Grid Columns="1*" ColumnCount="5" DefaultColumn="1*" CellSpacing="0" Margin="0,0">
+					        	<Panel Background="#0000" Width="50" Height="20">
+					        		<!-- Track 1 -->
+								</Panel>
+								<Panel Background="#0000" Width="50" Height="20">
+					        		<!-- Track 2 -->
+								</Panel>
+								<Circle ux:Name="cirBorder" Width="0" Height="0" >
+									<Stroke Width="15">
+										<SolidColor Color="#E79635" />
+									</Stroke>
+								</Circle>
+								<Timeline ux:Name="timeline" PlayMode="Wrap">
+									<Change Target="cirBorder.Width">
+										<Keyframe Value="0" Time="0.0"/>
+										<Keyframe Value="40" Time="0.7"/>
+									</Change>
+									<Change Target="cirBorder.Height">
+										<Keyframe Value="0" Time="0.0"/>
+										<Keyframe Value="40" Time="0.7"/>
+									</Change>
+									<Change Target="cirBorder.Opacity">
+										<Keyframe Value="1.0" Time="0.0"/>
+										<Keyframe Value="0.0" Time="0.7"/>
+									</Change>
+
+								</Timeline>
+								<Panel Background="#0000" Width="50" Height="20">
+					        		<!-- Track 4 -->
+								</Panel>
+								<Panel Background="#0000" Width="50" Height="20">
+					        		<!-- Track 5 -->
+								</Panel>
+					        </Grid>
+					    </Panel>
+					    <Button Alignment="Center" Text="" Margin="20,20" Padding="20,10,20,10" Width="200">
+					    	<Tapped>
+	                			<Scale Factor="0.8" Duration="0.3" Easing="QuadraticIn" />
+	                			<Set move_object.Value="true" />
+	                			<Set move_track_1.Value="true" />
+	                			<Set move_track_2.Value="true" />
+	                			<Set move_track_4.Value="true" />
+	                			<Set move_track_5.Value="true" />
+	                			<!-- <Pulse Target="pulseMe" /> -->
+	                			<!-- <Change own_progression.Y="{progression}" Duration="1.2" Easing="CubicIn" /> -->
+	                			<!-- <Move Target="own_progression" RelativeTo="Size" Y="{progression}" Duration="0.2" Easing="CubicOut" EasingBack="CubicIn" /> -->
+	                		</Tapped>
+				    		<Text Value="Show progression" Color="#fff" Alignment="Center" TextAlignment="Center" />
+				    		<float4 ux:Key="C600" ux:Value="#fff" />
+				    		<float4 ux:Key="C700" ux:Value="#fff" />
+				    		<Rectangle CornerRadius="4" Layer="Background" Color="#46aa1f" />
+				    	</Button>
+					</StackPanel>
+				</ScrollView>
+				<LinearGradient>
+			    	<GradientStop Offset="0" Color="#E79635" />
+			    	<GradientStop Offset="1" Color="#F0F1C8" />
+			    </LinearGradient>
+			</Panel>
+			<BottomFrameBackground DockPanel.Dock="Bottom" />
+		</DockPanel>
+	</EdgeNavigator>
+</App>
