@@ -92,8 +92,8 @@
 					<StackPanel>
 				    	<Each Items="{events}">
 		                    <!-- <DebugAction Message="i" /> -->
-		                    <StackPanel ux:Name="adminGridItems" Physics.IsPhysicsWorld="true" ZOffset="0.0" ItemSpacing="20" Color="{color}" Margin="1,1" Padding="2,2" Clicked="{selected}">
-		                    	<Rectangle ux:Name="grid_rectangle" Padding="2,2">
+		                    <StackPanel ux:Name="adminGridItems" Physics.IsPhysicsWorld="true" ZOffset="0.0" ItemSpacing="20" Color="{color}" Margin="3,1" Padding="5,5" Clicked="{selected}">
+		                    	<Rectangle ux:Name="grid_rectangle" Padding="4,4" CornerRadius="0">
 			                    	<WhileTrue Value="{change_color}">
 										<Change adminGridItems.Color="#1EB917" Duration="0.4" Easing="CubicIn" />
 										<Change weekday_text.Color="#fff" Duration="0.4" Easing="CubicIn" />
@@ -101,7 +101,7 @@
 			                       	</WhileTrue>
 			                       	<WhileTrue Value="{history_done}">
 										<Change grid_rectangle.Color="#1EB917" Duration="0.4" Easing="CubicIn" />
-										<Change adminGridItems.Color="#2CA206" Duration="0.4" Easing="CubicIn" />
+										<Change adminGridItems.Color="#459801" Duration="0.4" Easing="CubicIn" /><!-- #2CA206 -->
 										<Change weekday_text.Color="#fff" Duration="0.4" Easing="CubicIn" />
 										<Change name_text.Color="#fff" Duration="0.4" Easing="CubicIn" />
 										<!-- <Stroke Width="2" Color="#2CA206"/> -->
@@ -110,7 +110,7 @@
 			                       	<WhileTrue Value="{change_color_false}">
 										<Change adminGridItems.Color="#E74C3C" Duration="0.2" Easing="CubicIn" />
 			                       	</WhileTrue>
-			                       	<Grid Columns="2*,8*" ColumnCount="2" DefaultColumn="1*" CellSpacing="10" Margin="2,2" Height="40">
+			                       	<Grid Columns="2*,8*" ColumnCount="2" DefaultColumn="1*" CellSpacing="10" Margin="4,4" Height="40">
 			                    		<Text ux:Name="weekday_text" TextWrapping="Wrap" TextAlignment="Left" Alignment="CenterLeft" Value="{weekday}" />
 			                    		<Text ux:Name="name_text" TextWrapping="Wrap" TextAlignment="Left" Alignment="CenterLeft" Value="{name}" />
 			                    	</Grid>
