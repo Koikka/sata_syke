@@ -24,7 +24,7 @@
 				</MenuItem>
 				<!-- MENU ITEMS -->
 				<StackPanel ux:Name="normalMenuItems" ItemSpacing="50">
-					<MenuButton Alignment="HorizontalCenter" Text="Home">
+					<MenuButton Alignment="HorizontalCenter" Text="Etusivu">
 						<Clicked>
 							<Set home.Visibility="Visible" />
 							<Set register.Visibility="Collapsed" />
@@ -34,7 +34,7 @@
 							<!-- <Set extraContent.Visibility="Collapsed" /> -->
 						</Clicked>
 					</MenuButton>
-					<MenuButton Alignment="HorizontalCenter" Text="Status page">
+					<MenuButton Alignment="HorizontalCenter" Text="Tarkista edistymistäsi">
 						<Clicked>
 							<Set home.Visibility="Collapsed" />
 							<Set register.Visibility="Collapsed" />
@@ -46,7 +46,7 @@
 							<Set extraContent.Visibility="Collapsed" /> -->
 						</Clicked>
 					</MenuButton>
-					<MenuButton Alignment="HorizontalCenter" Text="Register new device">
+					<MenuButton Alignment="HorizontalCenter" Text="Rekisteröi laite">
 						<Clicked>
 							<Set home.Visibility="Collapsed" />
 							<Set register.Visibility="Visible" />
@@ -58,7 +58,7 @@
 							<Set extraContent.Visibility="Collapsed" /> -->
 						</Clicked>
 					</MenuButton>
-					<Image File="Images/logo.png" StretchMode="UniformToFill" Opacity="0.85" Alignment="Default" StretchDirection="Both" Margin="40, 0, 40, 0" />
+					<!-- <Image File="Images/logo.png" StretchMode="UniformToFill" Opacity="0.85" Alignment="Default" StretchDirection="Both" Margin="40, 0, 40, 0" /> -->
 				</StackPanel>
 			</StackPanel>
 			<ActivatingAnimation>
@@ -83,25 +83,30 @@
 				</Panel>
 			</StackPanel>
 			<Panel>
-				<Image Layer="Background" File="{bg_image}" StretchMode="UniformToFill" Opacity="0.85" Alignment="Top" StretchDirection="Both">
+				<!-- <Image Layer="Background" File="{bg_image}" StretchMode="UniformToFill" Opacity="0.85" Alignment="Top" StretchDirection="Both">
 					<Blur Radius="0.0" />
 					<Rotation Degrees="0" />
-				</Image>
+				</Image> -->
+				<LinearGradient>
+					<GradientStop Offset="0" Color="#4AB2E8" />
+					<GradientStop Offset="0.7" Color="#EBE69D" />
+					<GradientStop Offset="1" Color="#BF3D16" />
+				</LinearGradient>
 				<!-- <ScrollView Background="#f9f9f9"> -->
 				<ScrollView>
-					<StackPanel>
+					<StackPanel Margin="0, 3, 0, 0">
 				    	<Each Items="{events}">
 		                    <!-- <DebugAction Message="i" /> -->
 		                    <StackPanel ux:Name="adminGridItems" Physics.IsPhysicsWorld="true" ZOffset="0.0" ItemSpacing="20" Color="{color}" Margin="3,1" Padding="5,5" Clicked="{selected}">
 		                    	<Rectangle ux:Name="grid_rectangle" Padding="4,4" CornerRadius="0">
 			                    	<WhileTrue Value="{change_color}">
-										<Change adminGridItems.Color="#1EB917" Duration="0.4" Easing="CubicIn" />
+										<Change adminGridItems.Color="#1EB91788" Duration="0.4" Easing="CubicIn" />
 										<Change weekday_text.Color="#fff" Duration="0.4" Easing="CubicIn" />
 										<Change name_text.Color="#fff" Duration="0.4" Easing="CubicIn" />
 			                       	</WhileTrue>
 			                       	<WhileTrue Value="{history_done}">
 										<Change grid_rectangle.Color="#1EB917" Duration="0.4" Easing="CubicIn" />
-										<Change adminGridItems.Color="#459801" Duration="0.4" Easing="CubicIn" /><!-- #2CA206 -->
+										<Change adminGridItems.Color="#17ad00" Duration="0.4" Easing="CubicIn" /><!-- #2CA206 #459801-->
 										<Change weekday_text.Color="#fff" Duration="0.4" Easing="CubicIn" />
 										<Change name_text.Color="#fff" Duration="0.4" Easing="CubicIn" />
 										<!-- <Stroke Width="2" Color="#2CA206"/> -->
@@ -110,7 +115,7 @@
 			                       	<WhileTrue Value="{change_color_false}">
 										<Change adminGridItems.Color="#E74C3C" Duration="0.2" Easing="CubicIn" />
 			                       	</WhileTrue>
-			                       	<Grid Columns="2*,8*" ColumnCount="2" DefaultColumn="1*" CellSpacing="10" Margin="4,4" Height="40">
+			                       	<Grid Columns="2*,8*" ColumnCount="2" DefaultColumn="1*" CellSpacing="10" Margin="4,4" Height="60">
 			                    		<Text ux:Name="weekday_text" TextWrapping="Wrap" TextAlignment="Left" Alignment="CenterLeft" Value="{weekday}" />
 			                    		<Text ux:Name="name_text" TextWrapping="Wrap" TextAlignment="Left" Alignment="CenterLeft" Value="{name}" />
 			                    	</Grid>
@@ -122,7 +127,7 @@
 		            			<Scale Factor="0.8" Duration="0.3" Easing="QuadraticInOut" />
 		            			<!-- <Callback Handler="{load_program}" /> -->
 		            		</Tapped>
-				    		<Text Value="Send" Color="#fff" Alignment="Center" TextAlignment="Center" />
+				    		<Text Value="Lähetä" Color="#fff" Alignment="Center" TextAlignment="Center" />
 				    		<float4 ux:Key="C600" ux:Value="#fff" />
 				    		<float4 ux:Key="C700" ux:Value="#fff" />
 				    		<Rectangle CornerRadius="4" Layer="Background" Color="#46aa1f" />
@@ -131,7 +136,7 @@
 					    	<Tapped>
 		            			<Scale Factor="0.8" Duration="0.3" Easing="QuadraticInOut" />
 		            		</Tapped>
-				    		<Text Value="Load my program" Color="#fff" Alignment="Center" TextAlignment="Center" />
+				    		<Text Value="Lataa ohjelmani" Color="#fff" Alignment="Center" TextAlignment="Center" />
 				    		<float4 ux:Key="C600" ux:Value="#fff" />
 				    		<float4 ux:Key="C700" ux:Value="#fff" />
 				    		<Rectangle CornerRadius="4" Layer="Background" Color="#46aa1f" />
@@ -180,24 +185,44 @@
 
 			</JavaScript>
 			<ClientPanel>
-				<Image Layer="Background" File="{bg_image}" StretchMode="UniformToFill" Opacity="0.85" Alignment="Top" StretchDirection="Both">
+				<!-- <Image Layer="Background" File="{bg_image}" StretchMode="UniformToFill" Opacity="0.85" Alignment="Top" StretchDirection="Both">
 					<Blur Radius="0.0" />
 					<Rotation Degrees="0" />
-				</Image>
+				</Image> -->
+				<LinearGradient>
+					<GradientStop Offset="0" Color="#4AB2E8" />
+					<GradientStop Offset="0.7" Color="#EBE69D" />
+					<GradientStop Offset="1" Color="#BF3D16" />
+				</LinearGradient>
 				<StackPanel>
-					<Text FontSize="20" TextWrapping="Wrap" Alignment="TopCenter">Register this device by scanning QR code</Text>
+					<Text FontSize="20" TextWrapping="Wrap" Alignment="TopCenter" TextAlignment="Center" Margin="0, 30, 0, 0">Rekisteröi uusi laite skannaamalla QR koodi tai syöttämällä salasana alle.</Text>
 					<!-- <Text Value="{txt}" /> -->
-					<Button Text="SCAN" Clicked="{load}" />
-					<TextInput ux:Name="text" PlaceholderText="Password to 100syke" PlaceholderColor="#ccc" Height="50" Padding="5" Margin="10" Value="{txt}">
+					<Button Text="" Margin="20, 40, 20, 20" Padding="20,20" Width="200" Clicked="{load}">
+						<Rectangle CornerRadius="4" Layer="Background" Color="#46aa1f" />
+						<Grid RowCount="1" ColumnCount="2" Columns="2*,8*" Rows="1*" DefaultRow="1" DefaultColumn="2" CellSpacing="0" Margin="0, 0">
+							<Panel Height="50" Padding="0, 0, 0, 0" Width="50">
+								<ImageFill File="Images/camera_icon.png" StretchMode="UniformToFill" />
+							</Panel>
+							<Panel>
+								<Tapped>
+		                			<Scale Factor="0.8" Duration="0.3" Easing="QuadraticInOut" />
+		                		</Tapped>
+					    		<Text Value="Avaa kamera" Color="#fff" Alignment="Center" TextAlignment="Center" />
+					    		<float4 ux:Key="C600" ux:Value="#fff" />
+					    		<float4 ux:Key="C700" ux:Value="#fff" />
+					    	</Panel>
+				    	</Grid>
+					</Button>
+					<TextInput ux:Name="text" PlaceholderText="Salasana palveluun" PlaceholderColor="#ccc" Height="50" Padding="5" Margin="10" Value="{txt}">
 				        <Rectangle Layer="Background" Color="#F8F5E9">
 				            <Stroke Width="2" Brush="#BBB" />
 				        </Rectangle>
 				    </TextInput>
-				    <Button Alignment="Center" Text="" Margin="20,20" Clicked="{validate_code}" Padding="20,10,20,10" Width="100">
+				    <Button Alignment="Center" Text="" Margin="20,20" Clicked="{validate_code}" Padding="20,10,20,10" Width="200">
 				    	<Tapped>
                 			<Scale Factor="0.8" Duration="0.3" Easing="QuadraticInOut" />
                 		</Tapped>
-			    		<Text Value="Validate" Color="#fff" Alignment="Center" TextAlignment="Center" />
+			    		<Text Value="Tarkista koodi" Color="#fff" Alignment="Center" TextAlignment="Center" />
 			    		<float4 ux:Key="C600" ux:Value="#fff" />
 			    		<float4 ux:Key="C700" ux:Value="#fff" />
 			    		<Rectangle CornerRadius="4" Layer="Background" Color="#46aa1f" />
@@ -242,14 +267,14 @@
 							<Grid Columns="1*" ColumnCount="5" DefaultColumn="1*" CellSpacing="0" Margin="0,0">
 					        	<Panel Background="#000" Width="50" Height="500">
 					        		<Image Layer="Background" File="Images/track_01.png" StretchMode="Fill" Opacity="0.85" Alignment="Top" />
-									<Rectangle ux:Name="progression_1" Color="#F00" Width="15" Height="15" Alignment="BottomCenter" CornerRadius="12.5" />
+									<Rectangle ux:Name="progression_1" Color="#c7493a" Width="15" Height="15" Alignment="BottomCenter" CornerRadius="12.5" />
 									<WhileTrue ux:Name="move_track_1" Value="false">
 										<Change progression_1.Y="{collective_progression_1}" Duration="1.0" Easing="CubicIn" />
 									</WhileTrue>
 								</Panel>
 								<Panel Background="#000" Width="50" Height="500">
 									<Image Layer="Background" File="Images/track_02.png" StretchMode="Fill" Opacity="0.85" Alignment="Top" />
-									<Rectangle ux:Name="progression_2" Color="#F00" Width="15" Height="15" Alignment="BottomCenter" CornerRadius="12.5" />
+									<Rectangle ux:Name="progression_2" Color="#c7493a" Width="15" Height="15" Alignment="BottomCenter" CornerRadius="12.5" />
 									<WhileTrue ux:Name="move_track_2" Value="false">
 										<Change progression_2.Y="{collective_progression_2}" Duration="1.0" Easing="CubicIn" />
 									</WhileTrue>
@@ -257,21 +282,21 @@
 					        	<Panel Background="#000" Width="50" Height="500">
 					        		<Image Layer="Background" File="Images/track_03.png" StretchMode="Fill" Opacity="0.85" Alignment="Top" />
 									<!-- <Rectangle ux:Name="own_progression" Color="#F00" Width="10" Height="10" Alignment="BottomCenter" Y="{progression}" CornerRadius="5" /> -->
-									<Rectangle ux:Name="own_progression" Color="#F00" Width="20" Height="20" Alignment="BottomCenter" CornerRadius="10" />
+									<Rectangle ux:Name="own_progression" Color="#679775" Width="20" Height="20" Alignment="BottomCenter" CornerRadius="10" />
 									<WhileTrue ux:Name="move_object" Value="false">
 										<Change own_progression.Y="{progression}" Duration="1.0" Easing="CubicIn" />
 									</WhileTrue>
 								</Panel>
 								<Panel Background="#000" Width="50" Height="500">
 									<Image Layer="Background" File="Images/track_04.png" StretchMode="Fill" Opacity="0.85" Alignment="Top" />
-									<Rectangle ux:Name="progression_4" Color="#F00" Width="15" Height="15" Alignment="BottomCenter" CornerRadius="12.5" />
+									<Rectangle ux:Name="progression_4" Color="#c7493a" Width="15" Height="15" Alignment="BottomCenter" CornerRadius="12.5" />
 									<WhileTrue ux:Name="move_track_4" Value="false">
 										<Change progression_4.Y="{collective_progression_4}" Duration="1.0" Easing="CubicIn" />
 									</WhileTrue>
 								</Panel>
 								<Panel Background="#000" Width="50" Height="500">
 									<Image Layer="Background" File="Images/track_05.png" StretchMode="Fill" Opacity="0.85" Alignment="Top" />
-									<Rectangle ux:Name="progression_5" Color="#F00" Width="15" Height="15" Alignment="BottomCenter" CornerRadius="12.5" />
+									<Rectangle ux:Name="progression_5" Color="#c7493a" Width="15" Height="15" Alignment="BottomCenter" CornerRadius="12.5" />
 									<WhileTrue ux:Name="move_track_5" Value="false">
 										<Change progression_5.Y="{collective_progression_5}" Duration="1.0" Easing="CubicIn" />
 									</WhileTrue>
@@ -286,23 +311,23 @@
 								<Panel Background="#0000" Width="50" Height="20">
 					        		<!-- Track 2 -->
 								</Panel>
-								<Circle ux:Name="cirBorder" Width="0" Height="0" >
+								<Circle ux:Name="cirBorder" Width="0" Height="0">
 									<Stroke Width="15">
 										<SolidColor Color="#E79635" />
 									</Stroke>
 								</Circle>
 								<Timeline ux:Name="timeline" PlayMode="Wrap">
 									<Change Target="cirBorder.Width">
-										<Keyframe Value="0" Time="0.0"/>
-										<Keyframe Value="40" Time="0.7"/>
+										<Keyframe Value="0" Time="0.0" />
+										<Keyframe Value="40" Time="0.7" />
 									</Change>
 									<Change Target="cirBorder.Height">
-										<Keyframe Value="0" Time="0.0"/>
-										<Keyframe Value="40" Time="0.7"/>
+										<Keyframe Value="0" Time="0.0" />
+										<Keyframe Value="40" Time="0.7" />
 									</Change>
 									<Change Target="cirBorder.Opacity">
-										<Keyframe Value="1.0" Time="0.0"/>
-										<Keyframe Value="0.0" Time="0.7"/>
+										<Keyframe Value="1.0" Time="0.0" />
+										<Keyframe Value="0.0" Time="0.7" />
 									</Change>
 
 								</Timeline>
@@ -326,7 +351,7 @@
 	                			<!-- <Change own_progression.Y="{progression}" Duration="1.2" Easing="CubicIn" /> -->
 	                			<!-- <Move Target="own_progression" RelativeTo="Size" Y="{progression}" Duration="0.2" Easing="CubicOut" EasingBack="CubicIn" /> -->
 	                		</Tapped>
-				    		<Text Value="Show progression" Color="#fff" Alignment="Center" TextAlignment="Center" />
+				    		<Text Value="Näytä edistyminen" Color="#fff" Alignment="Center" TextAlignment="Center" />
 				    		<float4 ux:Key="C600" ux:Value="#fff" />
 				    		<float4 ux:Key="C700" ux:Value="#fff" />
 				    		<Rectangle CornerRadius="4" Layer="Background" Color="#46aa1f" />
@@ -334,9 +359,14 @@
 					</StackPanel>
 				</ScrollView>
 				<LinearGradient>
+					<GradientStop Offset="0" Color="#4AB2E8" />
+					<GradientStop Offset="0.7" Color="#EBE69D" />
+					<GradientStop Offset="1" Color="#BF3D16" />
+				</LinearGradient>
+				<!-- <LinearGradient>
 			    	<GradientStop Offset="0" Color="#E79635" />
 			    	<GradientStop Offset="1" Color="#F0F1C8" />
-			    </LinearGradient>
+			    </LinearGradient> -->
 			</Panel>
 			<BottomFrameBackground DockPanel.Dock="Bottom" />
 		</DockPanel>

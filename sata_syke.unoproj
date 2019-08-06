@@ -19,6 +19,48 @@
   "Mobile": {
     "Orientations": "Portrait"
   },
+  "Android": {
+    /*"GooglePlay": {
+      "SenderID": "935485284549"
+    },*/
+    "NotificationIcon": {
+      /*"LDPI": "Foo.png",*/
+      "MDPI": "Assets/res/mipmap-mdpi/ic_launcher.png",
+      "HDPI": "Assets/res/mipmap-hdpi/ic_launcher.png",
+      "XHDPI": "Assets/res/mipmap-xhdpi/ic_launcher.png",
+      "XXHDPI": "Assets/res/mipmap-xxhdpi/ic_launcher.png",
+      "XXXHDPI": "Assets/res/mipmap-xxxhdpi/ic_launcher.png",
+    },
+    "Icons": {
+      /*"LDPI": "Assets/res/mipmap-ldpi/ic_launcher.png",*/
+      "MDPI": "Assets/res/mipmap-mdpi/ic_launcher.png",
+      "HDPI": "Assets/res/mipmap-hdpi/ic_launcher.png",
+      "XHDPI": "Assets/res/mipmap-xhdpi/ic_launcher.png",
+      "XXHDPI": "Assets/res/mipmap-xxhdpi/ic_launcher.png",
+      "XXXHDPI": "Assets/res/mipmap-xxxhdpi/ic_launcher.png",
+    },
+    /* https://forums.fusetools.com/t/signing-android-apps/5515 */
+    "Package": "fi.samk.sata_syke",
+    "VersionCode": 101,
+    "VersionName": "1.0.1",
+    "Key": {
+      "Alias": "application",
+      "AliasPassword": "sata_syke",
+      "Store": "release.keystore",
+      "StorePassword": "sata_syke"
+    },
+    "SDK": {
+      "BuildToolsVersion": "26.0.0",
+      "CompileVersion": 26,
+      "MinVersion": 19,
+      "TargetVersion": 26
+    }
+  },
+  /*"Firebase": {
+    "GoogleServices": {
+      "Android": "google-services.json"
+    }
+  },*/
   "Name": "SATAsyke"
 }
 

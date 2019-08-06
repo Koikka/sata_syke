@@ -7,7 +7,7 @@ var txt_2 = Observable();
 var history_done = Observable();
 var bg_image = Observable("Images/orange_bg_low.png");
 var events = Observable(
-		{ id: 0, color: Observable("#FBD263"), name: "Register device and check that you have internet connection", weekday: "*: ", is_added: Observable(), change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(false), history_done: Observable(true) }
+		{ id: 0, color: Observable("#FBD263"), name: "Rekisteröi laite. Mikäli olet rekisteröinyt laitteen, lataa ohjelma.", weekday: "*: ", is_added: Observable(), change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(false), history_done: Observable(true) }
 	);
 // var events = Observable();
 var user_id_img = Observable(0);
@@ -21,6 +21,10 @@ var SAVENAME = "data.json";
 var user_id = 0;
 var load_program_visibility = Observable("Visible");
 var send_program_visibility = Observable("Collapsed");
+var query_going_on = false;
+// Create keystore
+// keytool -genkey -v -keystore release.keystore \
+//     -alias application -keyalg RSA -keysize 2048 -validity 10000
 
 // Scan QR code
 function load () {
@@ -84,11 +88,11 @@ function validate_code() {
 				object.id = txt.value;
 				object.user_id = json.id;
 				console.log("------------------ "+json.id);
-				txt_2.value = "SUCCESS";//JSON.stringify(response._bodyText);
+				txt_2.value = "Koodi on oikein. Nyt voit siirtyä etusivulle.";//JSON.stringify(response._bodyText);
 				Storage.write(SAVENAME, JSON.stringify(object));
 			} else {
 				console.log("--- THIS WAS NOT VALID PASSWORD ---");
-				txt_2.value = "ERROR";//JSON.stringify(response._bodyText);
+				txt_2.value = "Väärä koodi";//JSON.stringify(response._bodyText);
 			}
    //          user_id_img.value = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+txt.value;
 			// user_id_text.value = txt.value;
@@ -109,93 +113,113 @@ function load_program() {
 		if (isEmpty(object) || object.id == 0 || object.user_id === undefined) {
 			console.log("can not make query with empty credintials: "+object);
 		} else {
-			console.log("load user "+object.user_id+" program");
-			var body = "action=request_user_calendar&id="+object.user_id;
-		    var url = "http://koikka.work/100syke/100syke.php";
-		    fetch(url, {
-		        method: 'POST',
-		        headers: { "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"},
-		        body: body,
-		        cache: false
-		    }).then(function(response) {
-		        if(response.ok) {
-		        	var json = JSON.parse(response._bodyText);
-		        	events.value = [];
-					if (json.status) {
-						var data = JSON.parse(json.data);
-						var tasks_done = json.tasks_done;
-						var weekday_arr = ["mo", "tu", "we", "th", "fr", "sa", "su"];
-						var weekday_name = ["MA", "TI", "KE", "TO", "PE", "LA", "SU"];
-						// console.log(data[weekday_arr[i]]);
-						for (var i = 0; i < weekday_arr.length; i++) {
-							var is_done = false;
-							for (var k = 0; k < tasks_done.length; k++) {
-								// console.log("--"+tasks_done[k].event);
-								if (tasks_done[k].event == data[weekday_arr[i]] && tasks_done[k].day == weekday_arr[i]) {
-									is_done = true;
+			if (!query_going_on) {
+				query_going_on = true;
+				// for (var i = 0; i < events.length; i++) {
+	   //      		events.removeAt(i);
+	   //      	}
+	   			// http://koikka.work/100syke/100syke.php?action=request_user_calendar&id=19
+	        	events.clear();
+	        	console.log("------------------------------------------------"+events.length);
+				console.log("in load load user "+object.user_id+" program");
+				var body = "action=request_user_calendar&id="+object.user_id;
+			    var url = "http://koikka.work/100syke/100syke.php";
+			    fetch(url, {
+			        method: 'POST',
+			        headers: { "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"},
+			        body: body,
+			        cache: false
+			    }).then(function(response) {
+			        if(response.ok) {
+			        	var json = JSON.parse(response._bodyText);
+			        	// events.value = [];
+						if (json.status) {
+							var data = JSON.parse(json.data);
+							var tasks_done = json.tasks_done;
+							var weekday_arr = ["mo", "tu", "we", "th", "fr", "sa", "su"];
+							var weekday_name = ["MA", "TI", "KE", "TO", "PE", "LA", "SU"];
+							// console.log(data[weekday_arr[i]]);
+							for (var i = 0; i < weekday_arr.length; i++) {
+								var is_done = false;
+								for (var k = 0; k < tasks_done.length; k++) {
+									// console.log("--"+tasks_done[k].event);
+									if (tasks_done[k].event == data[weekday_arr[i]] && tasks_done[k].day == weekday_arr[i]) {
+										is_done = true;
+									}
 								}
+								console.log("*"+weekday_arr[i]);
+								console.log("+"+data[weekday_arr[i]]);
+								if (is_done) {
+									events.add({ id: weekday_arr[i], color: Observable("#1EB917"), name: data[weekday_arr[i]], is_added: Observable(), weekday: weekday_name[i]+": ", change_color: Observable(true), change_color_false: Observable(false), done_week: Observable(true), history_done: Observable(true) });
+								} else {
+									events.add({ id: weekday_arr[i], color: Observable("#FFC53588"), name: data[weekday_arr[i]], is_added: Observable(), weekday: weekday_name[i]+": ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(false), history_done: Observable(false) });
+								}
+								// } else {
+									// events.add({ id: weekday_arr[i], color: Observable("#AED6F1"), name: data[weekday_arr[i]], is_added: Observable(), weekday: "MA: ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(data.done) });
+								// }
 							}
-							console.log("*"+weekday_arr[i]);
-							console.log("+"+data[weekday_arr[i]]);
-							if (is_done) {
-								events.add({ id: weekday_arr[i], color: Observable("#1EB917"), name: data[weekday_arr[i]], is_added: Observable(), weekday: weekday_name[i]+": ", change_color: Observable(true), change_color_false: Observable(false), done_week: Observable(true), history_done: Observable(true) });
+							if ((json.tasks_percent*4) < 5) {
+								progression.value = "-"+((json.tasks_percent*4));
 							} else {
-								events.add({ id: weekday_arr[i], color: Observable("#FFC535"), name: data[weekday_arr[i]], is_added: Observable(), weekday: weekday_name[i]+": ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(false), history_done: Observable(false) });
+								progression.value = "-"+((json.tasks_percent*4)-5);
 							}
-							// } else {
-								// events.add({ id: weekday_arr[i], color: Observable("#AED6F1"), name: data[weekday_arr[i]], is_added: Observable(), weekday: "MA: ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(data.done) });
-							// }
-						}
-						if ((json.tasks_percent*4) < 5) {
-							progression.value = "-"+((json.tasks_percent*4));
-						} else {
-							progression.value = "-"+((json.tasks_percent*4)-5);
-						}
-						progression.value = "-"+json.tasks_percent;
-						console.log("progression: "+progression.value);
-						load_program_visibility.value = "Collapsed";
-						send_program_visibility.value = "Visible";
-						collective_progression_1.value = "-"+(Math.floor(Math.random() * 50)+1);
-						collective_progression_2.value = "-"+(Math.floor(Math.random() * 70)+1);
-						collective_progression_4.value = "-"+(Math.floor(Math.random() * 100)+1);
-						collective_progression_5.value = "-"+(Math.floor(Math.random() * 20)+1);
-						console.log(collective_progression_1.value);
-						console.log(collective_progression_2.value);
-						console.log(collective_progression_4.value);
-						console.log(collective_progression_5.value);
-						// progression.value="-100";
+							progression.value = "-"+json.tasks_percent;
+							console.log("progression: "+progression.value);
+							load_program_visibility.value = "Collapsed";
+							send_program_visibility.value = "Visible";
+							var k = 1;
+							for (var i = 0; i < json.tasks_percent_competitor.length; i++) {
+								eval("collective_progression_"+k).value = (-1)*json.tasks_percent_competitor[i].percent_competitor;
+								k++;
+								if (k == 3)
+									k++;
+							}
+							// collective_progression_1.value = "-"+(Math.floor(Math.random() * 50)+1);
+							// collective_progression_2.value = "-"+(Math.floor(Math.random() * 70)+1);
+							// collective_progression_4.value = "-"+(Math.floor(Math.random() * 100)+1);
+							// collective_progression_5.value = "-"+(Math.floor(Math.random() * 20)+1);
+							console.log(collective_progression_1.value);
+							console.log(collective_progression_2.value);
+							console.log(collective_progression_4.value);
+							console.log(collective_progression_5.value);
+							// progression.value="-100";
 
-						// events.add({ id: "mo", color: Observable("#AED6F1"), name: data.mo, is_added: Observable(), weekday: "MA: ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(data.done) });
-						// events.add({ id: "tu", color: Observable("#AED6F1"), name: data.tu, is_added: Observable(), weekday: "TI: ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(data.done) });
-						// events.add({ id: "we", color: Observable("#AED6F1"), name: data.we, is_added: Observable(), weekday: "KE: ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(data.done) });
-						// events.add({ id: "th", color: Observable("#AED6F1"), name: data.th, is_added: Observable(), weekday: "TO: ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(data.done) });
-						// events.add({ id: "fr", color: Observable("#AED6F1"), name: data.fr, is_added: Observable(), weekday: "PE: ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(data.done) });
-						// events.add({ id: "sa", color: Observable("#AED6F1"), name: data.sa, is_added: Observable(), weekday: "LA: ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(data.done) });
-						// events.add({ id: "su", color: Observable("#AED6F1"), name: data.su, is_added: Observable(), weekday: "SU: ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(data.done) });
-						// console.log(data.mo);
-						// console.log(data.tu);
-						// console.log(data.we);
-						// console.log(data.th);
-						// console.log(data.fr);
-						// console.log(data.sa);
-						// console.log(data.su);
-					} else {
-						console.log("--- THIS WAS NOT VALID QUERY ---");
-					}
-		        } else {
-		            console.log("False HTTP response : "+response.status);
-		        }
-		    }).catch(function(err) {
-		        if(err != "SyntaxError: Unexpected end of input") {
-		            // An error occurred somewhere in the Promise chain
-		            console.log("Server error : "+err);
-		        } else{
-		            console.log("SERVER SYNTAX ERROR");
-		        }
-		    });
+							// events.add({ id: "mo", color: Observable("#AED6F1"), name: data.mo, is_added: Observable(), weekday: "MA: ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(data.done) });
+							// events.add({ id: "tu", color: Observable("#AED6F1"), name: data.tu, is_added: Observable(), weekday: "TI: ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(data.done) });
+							// events.add({ id: "we", color: Observable("#AED6F1"), name: data.we, is_added: Observable(), weekday: "KE: ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(data.done) });
+							// events.add({ id: "th", color: Observable("#AED6F1"), name: data.th, is_added: Observable(), weekday: "TO: ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(data.done) });
+							// events.add({ id: "fr", color: Observable("#AED6F1"), name: data.fr, is_added: Observable(), weekday: "PE: ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(data.done) });
+							// events.add({ id: "sa", color: Observable("#AED6F1"), name: data.sa, is_added: Observable(), weekday: "LA: ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(data.done) });
+							// events.add({ id: "su", color: Observable("#AED6F1"), name: data.su, is_added: Observable(), weekday: "SU: ", change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(data.done) });
+							// console.log(data.mo);
+							// console.log(data.tu);
+							// console.log(data.we);
+							// console.log(data.th);
+							// console.log(data.fr);
+							// console.log(data.sa);
+							// console.log(data.su);
+						} else {
+							console.log("--- THIS WAS NOT VALID QUERY ---");
+						}
+			        } else {
+			            console.log("False HTTP response : "+response.status);
+			        }
+			        query_going_on = false;
+			    }).catch(function(err) {
+			    	events.add({ id: 0, color: Observable("#FBD263"), name: "Rekisteröi laite ja varmista, internet yhteys. Mikäli olet rekisteröinyt laitteen, lataa ohjelma napista.", weekday: "*: ", is_added: Observable(), change_color: Observable(false), change_color_false: Observable(false), done_week: Observable(false), history_done: Observable(true) });
+			        if(err != "SyntaxError: Unexpected end of input") {
+			            // An error occurred somewhere in the Promise chain
+			            console.log("Server error : "+err);
+			        } else{
+			            console.log("SERVER SYNTAX ERROR");
+			        }
+			        query_going_on = false;
+			    });
+			}
 		}
 	}).catch(function(error) {
-		console.log('Error: ' + error)
+		console.log('Error: ' + error);
+		query_going_on = false;
 	});
 }
 function selected(arg) {
@@ -242,7 +266,7 @@ function send_program() {
 		if (isEmpty(object) || object.id == 0 || object.user_id === undefined) {
 			console.log("can not make query with empty credintials: "+object);
 		} else {
-			console.log("load user "+object.user_id+" program");
+			console.log("in send load user "+object.user_id+" program");
 			// console.log(JSON.stringify(events));
 			for (var i = 0; i < events._values.length; i++) {
 				// console.log(JSON.stringify(events._values[i]));
